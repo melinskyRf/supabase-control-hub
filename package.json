@@ -1,0 +1,48 @@
+{
+  "name": "supabase-control-hub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:standard": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "diagnose": "node scripts/diagnose.mjs",
+    "check:config": "node scripts/check-config.mjs",
+    "test": "vitest run",
+    "test:core": "node tests/core.test.mjs",
+    "test:smoke": "node tests/runtime-smoke.mjs",
+    "test:e2e": "playwright test",
+    "setup": "node scripts/setup.mjs",
+    "worker": "tsx --env-file=.env.local scripts/worker.ts",
+    "mcp": "tsx --env-file=.env.local scripts/mcp.ts"
+  },
+  "dependencies": {
+    "next": "16.0.10",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "@electric-sql/pglite": "0.3.14",
+    "drizzle-orm": "0.45.1",
+    "pg": "8.16.3",
+    "zod": "4.1.13",
+    "@supabase/supabase-js": "2.89.0",
+    "lucide-react": "0.561.0",
+    "@radix-ui/react-dialog": "1.1.15",
+    "clsx": "2.1.1",
+    "tailwind-merge": "3.4.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@types/pg": "8.15.6",
+    "tsx": "4.21.0",
+    "vitest": "4.0.15",
+    "@playwright/test": "1.57.0",
+    "tailwindcss": "4.1.18",
+    "@tailwindcss/postcss": "4.1.18"
+  }
+}

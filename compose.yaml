@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_DB: control_hub
+      POSTGRES_USER: hub
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Configure POSTGRES_PASSWORD}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hub -d control_hub"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  web:
+    build: .
+    env_file: .env.local
+    environment:
+      DATABASE_URL: postgresql://hub:${POSTGRES_PASSWORD}@postgres:5432/control_hub
+      PG_DUMP_PATH: /usr/bin/pg_dump
+      PG_RESTORE_PATH: /usr/bin/pg_restore
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - backups:/app/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+  worker:
+    build: .
+    command: ["node", "--import", "tsx", "scripts/worker.ts"]
+    env_file: .env.local
+    environment:
+      DATABASE_URL: postgresql://hub:${POSTGRES_PASSWORD}@postgres:5432/control_hub
+      PG_DUMP_PATH: /usr/bin/pg_dump
+      PG_RESTORE_PATH: /usr/bin/pg_restore
+    volumes:
+      - backups:/app/backups
+    depends_on:
+      web:
+        condition: service_started
+volumes:
+  postgres:
+  backups:
